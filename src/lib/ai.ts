@@ -251,6 +251,82 @@ export function generateStubResponse(
 }
 
 // ----------------------------------------------------------------
+// extractPreferencesFromText
+// Regex-based keyword extraction. Used as a safety net alongside
+// Ollama's extraction — catches fields Ollama may fail to populate.
+// Returns only the fields it found (caller merges with Ollama's).
+// ----------------------------------------------------------------
+export function extractPreferencesFromText(
+  userMessage: string,
+  existingPrefs: TravelPreferences
+): Record<string, unknown> {
+  const update: Record<string, unknown> = {};
+  const lower = userMessage.toLowerCase();
+
+  // Budget: "$1500", "$ 2,000", "1500 dollars", "budget of 1500", "budget is 1500"
+  const budgetMatch = userMessage.match(/\$\s?([\d,]+)/) ??
+    lower.match(/(\d[\d,]*)\s*(?:dollar|usd|cad|eur|gbp)/) ??
+    lower.match(/budget\s*(?:of|is|:)?\s*(\d[\d,]*)/);
+  if (budgetMatch) {
+    update.budget = Number(budgetMatch[1].replace(/,/g, ""));
+  }
+
+  // Currency
+  if (lower.includes("cad") || lower.includes("canadian")) update.currency = "CAD";
+  else if (lower.includes("eur") || lower.includes("euro")) update.currency = "EUR";
+  else if (lower.includes("gbp") || lower.includes("pound")) update.currency = "GBP";
+
+  // Trip length: "7 days", "10 nights", "5 day"
+  const daysMatch = lower.match(/(\d+)\s*(?:day|night)/);
+  if (daysMatch) update.tripLengthDays = Number(daysMatch[1]);
+
+  // Origins (check these BEFORE destinations, so "from Toronto to Cancun" sets both correctly)
+  const fromMatch = lower.match(/(?:from|leaving|departing|flying from)\s+([a-z ]+?)(?:\s+to\s|\s*,|\s*\.|$)/);
+  const originCities: Record<string, string> = {
+    "toronto": "Toronto", "new york": "New York", "nyc": "New York",
+    "los angeles": "Los Angeles", "la": "Los Angeles", "chicago": "Chicago",
+    "vancouver": "Vancouver", "miami": "Miami", "montreal": "Montreal",
+  };
+  if (fromMatch && !existingPrefs.origin) {
+    const raw = fromMatch[1].trim();
+    update.origin = originCities[raw] ?? raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  if (!update.origin && !existingPrefs.origin) {
+    for (const [key, label] of Object.entries(originCities)) {
+      if (lower.includes(key)) { update.origin = label; break; }
+    }
+  }
+  // IATA code fallback (3 uppercase letters like JFK, YYZ)
+  if (!update.origin && !existingPrefs.origin) {
+    const iataMatch = userMessage.match(/\b([A-Z]{3})\b/);
+    if (iataMatch) update.origin = iataMatch[1];
+  }
+
+  // Destinations
+  const destCities: Record<string, string> = {
+    "cancun": "Cancun", "cancún": "Cancun", "london": "London", "paris": "Paris",
+    "tokyo": "Tokyo", "bali": "Bali", "jamaica": "Jamaica", "montego bay": "Montego Bay",
+    "punta cana": "Punta Cana", "dominican": "Punta Cana", "rome": "Rome",
+    "barcelona": "Barcelona", "cuba": "Cuba", "havana": "Havana", "hawaii": "Hawaii",
+    "honolulu": "Honolulu", "bangkok": "Bangkok", "thailand": "Bangkok",
+    "nassau": "Nassau", "bahamas": "Nassau", "mexico city": "Mexico City",
+    "amsterdam": "Amsterdam",
+  };
+  const toMatch = lower.match(/(?:to|visit|going to|go to|destination)\s+([a-z ]+?)(?:\s+for\s|\s+from\s|\s*,|\s*\.|$)/);
+  if (toMatch && !existingPrefs.destination && !update.destination) {
+    const raw = toMatch[1].trim();
+    update.destination = destCities[raw] ?? raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  if (!update.destination && !existingPrefs.destination) {
+    for (const [key, label] of Object.entries(destCities)) {
+      if (lower.includes(key)) { update.destination = label; break; }
+    }
+  }
+
+  return update;
+}
+
+// ----------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------
 function getMissingFields(prefs: TravelPreferences | Record<string, unknown>): string[] {

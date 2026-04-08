@@ -1,0 +1,177 @@
+[
+  { "airline": "Spirit Airlines",     "origin": "JFK", "destination": "CUN", "price": 289, "currency": "USD", "stops": 1, "duration": "PT6H15M" },
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "CUN", "price": 342, "currency": "USD", "stops": 0, "duration": "PT3H45M" },
+  { "airline": "Delta Air Lines",     "origin": "JFK", "destination": "CUN", "price": 478, "currency": "USD", "stops": 0, "duration": "PT3H50M" },
+
+  { "airline": "Norwegian Air",       "origin": "JFK", "destination": "LHR", "price": 385, "currency": "USD", "stops": 1, "duration": "PT9H30M" },
+  { "airline": "Virgin Atlantic",     "origin": "JFK", "destination": "LHR", "price": 495, "currency": "USD", "stops": 0, "duration": "PT7H15M" },
+  { "airline": "British Airways",     "origin": "JFK", "destination": "LHR", "price": 689, "currency": "USD", "stops": 0, "duration": "PT7H00M" },
+
+  { "airline": "Level",               "origin": "JFK", "destination": "CDG", "price": 362, "currency": "USD", "stops": 1, "duration": "PT10H00M" },
+  { "airline": "Air France",          "origin": "JFK", "destination": "CDG", "price": 478, "currency": "USD", "stops": 0, "duration": "PT7H30M" },
+  { "airline": "Delta Air Lines",     "origin": "JFK", "destination": "CDG", "price": 659, "currency": "USD", "stops": 0, "duration": "PT7H20M" },
+
+  { "airline": "Korean Air",          "origin": "JFK", "destination": "NRT", "price": 598, "currency": "USD", "stops": 1, "duration": "PT16H30M" },
+  { "airline": "Japan Airlines",      "origin": "JFK", "destination": "NRT", "price": 742, "currency": "USD", "stops": 0, "duration": "PT14H00M" },
+  { "airline": "All Nippon Airways",  "origin": "JFK", "destination": "NRT", "price": 989, "currency": "USD", "stops": 0, "duration": "PT13H45M" },
+
+  { "airline": "Singapore Airlines",  "origin": "JFK", "destination": "DPS", "price": 834, "currency": "USD", "stops": 1, "duration": "PT24H00M" },
+  { "airline": "Cathay Pacific",      "origin": "JFK", "destination": "DPS", "price": 978, "currency": "USD", "stops": 1, "duration": "PT22H30M" },
+  { "airline": "Emirates",            "origin": "JFK", "destination": "DPS", "price": 1215, "currency": "USD", "stops": 1, "duration": "PT23H45M" },
+
+  { "airline": "Spirit Airlines",     "origin": "JFK", "destination": "MBJ", "price": 198, "currency": "USD", "stops": 0, "duration": "PT3H30M" },
+  { "airline": "JetBlue",             "origin": "JFK", "destination": "MBJ", "price": 264, "currency": "USD", "stops": 0, "duration": "PT3H15M" },
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "MBJ", "price": 389, "currency": "USD", "stops": 0, "duration": "PT3H20M" },
+
+  { "airline": "Spirit Airlines",     "origin": "JFK", "destination": "PUJ", "price": 225, "currency": "USD", "stops": 0, "duration": "PT4H00M" },
+  { "airline": "JetBlue",             "origin": "JFK", "destination": "PUJ", "price": 289, "currency": "USD", "stops": 0, "duration": "PT3H45M" },
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "PUJ", "price": 412, "currency": "USD", "stops": 0, "duration": "PT3H50M" },
+
+  { "airline": "Norwegian Air",       "origin": "JFK", "destination": "FCO", "price": 412, "currency": "USD", "stops": 1, "duration": "PT11H30M" },
+  { "airline": "ITA Airways",         "origin": "JFK", "destination": "FCO", "price": 524, "currency": "USD", "stops": 0, "duration": "PT9H00M" },
+  { "airline": "Delta Air Lines",     "origin": "JFK", "destination": "FCO", "price": 745, "currency": "USD", "stops": 0, "duration": "PT8H45M" },
+
+  { "airline": "Vueling",             "origin": "JFK", "destination": "BCN", "price": 389, "currency": "USD", "stops": 1, "duration": "PT10H30M" },
+  { "airline": "Iberia",              "origin": "JFK", "destination": "BCN", "price": 512, "currency": "USD", "stops": 0, "duration": "PT7H45M" },
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "BCN", "price": 724, "currency": "USD", "stops": 0, "duration": "PT7H30M" },
+
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "HAV", "price": 198, "currency": "USD", "stops": 0, "duration": "PT3H15M" },
+  { "airline": "JetBlue",             "origin": "JFK", "destination": "HAV", "price": 245, "currency": "USD", "stops": 0, "duration": "PT3H00M" },
+  { "airline": "Delta Air Lines",     "origin": "JFK", "destination": "HAV", "price": 312, "currency": "USD", "stops": 0, "duration": "PT3H10M" },
+
+  { "airline": "Southwest Airlines",  "origin": "JFK", "destination": "HNL", "price": 389, "currency": "USD", "stops": 1, "duration": "PT13H00M" },
+  { "airline": "Hawaiian Airlines",   "origin": "JFK", "destination": "HNL", "price": 498, "currency": "USD", "stops": 0, "duration": "PT11H00M" },
+  { "airline": "Delta Air Lines",     "origin": "JFK", "destination": "HNL", "price": 634, "currency": "USD", "stops": 0, "duration": "PT10H45M" },
+
+  { "airline": "Korean Air",          "origin": "JFK", "destination": "BKK", "price": 712, "currency": "USD", "stops": 1, "duration": "PT22H00M" },
+  { "airline": "Cathay Pacific",      "origin": "JFK", "destination": "BKK", "price": 856, "currency": "USD", "stops": 1, "duration": "PT20H30M" },
+  { "airline": "Thai Airways",        "origin": "JFK", "destination": "BKK", "price": 1098, "currency": "USD", "stops": 1, "duration": "PT21H00M" },
+
+  { "airline": "Spirit Airlines",     "origin": "JFK", "destination": "NAS", "price": 148, "currency": "USD", "stops": 0, "duration": "PT2H30M" },
+  { "airline": "Bahamasair",          "origin": "JFK", "destination": "NAS", "price": 198, "currency": "USD", "stops": 0, "duration": "PT2H15M" },
+  { "airline": "American Airlines",   "origin": "JFK", "destination": "NAS", "price": 265, "currency": "USD", "stops": 0, "duration": "PT2H20M" },
+
+  { "airline": "Volaris",             "origin": "JFK", "destination": "MEX", "price": 265, "currency": "USD", "stops": 1, "duration": "PT7H30M" },
+  { "airline": "Aeromexico",          "origin": "JFK", "destination": "MEX", "price": 312, "currency": "USD", "stops": 0, "duration": "PT5H15M" },
+  { "airline": "United Airlines",     "origin": "JFK", "destination": "MEX", "price": 445, "currency": "USD", "stops": 0, "duration": "PT5H00M" },
+
+  { "airline": "Sunwing Airlines",    "origin": "YYZ", "destination": "CUN", "price": 335, "currency": "USD", "stops": 0, "duration": "PT4H30M" },
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "CUN", "price": 412, "currency": "USD", "stops": 0, "duration": "PT4H15M" },
+  { "airline": "WestJet",             "origin": "YYZ", "destination": "CUN", "price": 565, "currency": "USD", "stops": 0, "duration": "PT4H20M" },
+
+  { "airline": "WestJet",             "origin": "YYZ", "destination": "LHR", "price": 398, "currency": "USD", "stops": 1, "duration": "PT10H30M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "LHR", "price": 512, "currency": "USD", "stops": 0, "duration": "PT7H30M" },
+  { "airline": "British Airways",     "origin": "YYZ", "destination": "LHR", "price": 724, "currency": "USD", "stops": 0, "duration": "PT7H15M" },
+
+  { "airline": "Level",               "origin": "YYZ", "destination": "CDG", "price": 378, "currency": "USD", "stops": 1, "duration": "PT10H30M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "CDG", "price": 489, "currency": "USD", "stops": 0, "duration": "PT7H30M" },
+  { "airline": "Air France",          "origin": "YYZ", "destination": "CDG", "price": 698, "currency": "USD", "stops": 0, "duration": "PT7H15M" },
+
+  { "airline": "Air China",           "origin": "YYZ", "destination": "NRT", "price": 645, "currency": "USD", "stops": 1, "duration": "PT16H30M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "NRT", "price": 812, "currency": "USD", "stops": 0, "duration": "PT13H30M" },
+  { "airline": "Japan Airlines",      "origin": "YYZ", "destination": "NRT", "price": 1045, "currency": "USD", "stops": 0, "duration": "PT13H15M" },
+
+  { "airline": "Sunwing Airlines",    "origin": "YYZ", "destination": "MBJ", "price": 265, "currency": "USD", "stops": 0, "duration": "PT4H00M" },
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "MBJ", "price": 312, "currency": "USD", "stops": 0, "duration": "PT3H45M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "MBJ", "price": 445, "currency": "USD", "stops": 0, "duration": "PT3H50M" },
+
+  { "airline": "Sunwing Airlines",    "origin": "YYZ", "destination": "PUJ", "price": 285, "currency": "USD", "stops": 0, "duration": "PT4H30M" },
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "PUJ", "price": 345, "currency": "USD", "stops": 0, "duration": "PT4H15M" },
+  { "airline": "WestJet",             "origin": "YYZ", "destination": "PUJ", "price": 478, "currency": "USD", "stops": 0, "duration": "PT4H20M" },
+
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "FCO", "price": 445, "currency": "USD", "stops": 1, "duration": "PT12H00M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "FCO", "price": 589, "currency": "USD", "stops": 0, "duration": "PT9H30M" },
+  { "airline": "ITA Airways",         "origin": "YYZ", "destination": "FCO", "price": 812, "currency": "USD", "stops": 0, "duration": "PT9H15M" },
+
+  { "airline": "Sunwing Airlines",    "origin": "YYZ", "destination": "HAV", "price": 225, "currency": "USD", "stops": 0, "duration": "PT3H30M" },
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "HAV", "price": 289, "currency": "USD", "stops": 0, "duration": "PT3H15M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "HAV", "price": 412, "currency": "USD", "stops": 1, "duration": "PT5H30M" },
+
+  { "airline": "Air Transat",         "origin": "YYZ", "destination": "BCN", "price": 412, "currency": "USD", "stops": 1, "duration": "PT11H00M" },
+  { "airline": "Air Canada",          "origin": "YYZ", "destination": "BCN", "price": 534, "currency": "USD", "stops": 0, "duration": "PT8H15M" },
+  { "airline": "Iberia",              "origin": "YYZ", "destination": "BCN", "price": 756, "currency": "USD", "stops": 1, "duration": "PT11H00M" },
+
+  { "airline": "Spirit Airlines",     "origin": "LAX", "destination": "CUN", "price": 289, "currency": "USD", "stops": 1, "duration": "PT7H00M" },
+  { "airline": "United Airlines",     "origin": "LAX", "destination": "CUN", "price": 356, "currency": "USD", "stops": 0, "duration": "PT4H30M" },
+  { "airline": "American Airlines",   "origin": "LAX", "destination": "CUN", "price": 489, "currency": "USD", "stops": 0, "duration": "PT4H15M" },
+
+  { "airline": "Norwegian Air",       "origin": "LAX", "destination": "LHR", "price": 412, "currency": "USD", "stops": 1, "duration": "PT13H00M" },
+  { "airline": "United Airlines",     "origin": "LAX", "destination": "LHR", "price": 545, "currency": "USD", "stops": 0, "duration": "PT10H30M" },
+  { "airline": "British Airways",     "origin": "LAX", "destination": "LHR", "price": 745, "currency": "USD", "stops": 0, "duration": "PT10H15M" },
+
+  { "airline": "Korean Air",          "origin": "LAX", "destination": "NRT", "price": 542, "currency": "USD", "stops": 1, "duration": "PT14H00M" },
+  { "airline": "Japan Airlines",      "origin": "LAX", "destination": "NRT", "price": 689, "currency": "USD", "stops": 0, "duration": "PT11H00M" },
+  { "airline": "All Nippon Airways",  "origin": "LAX", "destination": "NRT", "price": 912, "currency": "USD", "stops": 0, "duration": "PT10H45M" },
+
+  { "airline": "Singapore Airlines",  "origin": "LAX", "destination": "DPS", "price": 712, "currency": "USD", "stops": 1, "duration": "PT18H30M" },
+  { "airline": "Cathay Pacific",      "origin": "LAX", "destination": "DPS", "price": 856, "currency": "USD", "stops": 1, "duration": "PT17H00M" },
+  { "airline": "Garuda Indonesia",    "origin": "LAX", "destination": "DPS", "price": 1098, "currency": "USD", "stops": 1, "duration": "PT18H00M" },
+
+  { "airline": "Norwegian Air",       "origin": "LAX", "destination": "FCO", "price": 445, "currency": "USD", "stops": 1, "duration": "PT14H00M" },
+  { "airline": "Delta Air Lines",     "origin": "LAX", "destination": "FCO", "price": 589, "currency": "USD", "stops": 1, "duration": "PT13H00M" },
+  { "airline": "ITA Airways",         "origin": "LAX", "destination": "FCO", "price": 812, "currency": "USD", "stops": 1, "duration": "PT13H30M" },
+
+  { "airline": "Southwest Airlines",  "origin": "LAX", "destination": "HNL", "price": 178, "currency": "USD", "stops": 0, "duration": "PT5H30M" },
+  { "airline": "Hawaiian Airlines",   "origin": "LAX", "destination": "HNL", "price": 235, "currency": "USD", "stops": 0, "duration": "PT5H15M" },
+  { "airline": "Alaska Airlines",     "origin": "LAX", "destination": "HNL", "price": 312, "currency": "USD", "stops": 0, "duration": "PT5H20M" },
+
+  { "airline": "Korean Air",          "origin": "LAX", "destination": "BKK", "price": 645, "currency": "USD", "stops": 1, "duration": "PT18H00M" },
+  { "airline": "Cathay Pacific",      "origin": "LAX", "destination": "BKK", "price": 789, "currency": "USD", "stops": 1, "duration": "PT16H30M" },
+  { "airline": "Thai Airways",        "origin": "LAX", "destination": "BKK", "price": 1045, "currency": "USD", "stops": 1, "duration": "PT17H00M" },
+
+  { "airline": "Spirit Airlines",     "origin": "ORD", "destination": "CUN", "price": 298, "currency": "USD", "stops": 1, "duration": "PT6H30M" },
+  { "airline": "United Airlines",     "origin": "ORD", "destination": "CUN", "price": 365, "currency": "USD", "stops": 0, "duration": "PT4H00M" },
+  { "airline": "American Airlines",   "origin": "ORD", "destination": "CUN", "price": 498, "currency": "USD", "stops": 0, "duration": "PT3H45M" },
+
+  { "airline": "Norwegian Air",       "origin": "ORD", "destination": "LHR", "price": 389, "currency": "USD", "stops": 1, "duration": "PT10H30M" },
+  { "airline": "United Airlines",     "origin": "ORD", "destination": "LHR", "price": 512, "currency": "USD", "stops": 0, "duration": "PT8H30M" },
+  { "airline": "British Airways",     "origin": "ORD", "destination": "LHR", "price": 712, "currency": "USD", "stops": 0, "duration": "PT8H15M" },
+
+  { "airline": "Level",               "origin": "ORD", "destination": "CDG", "price": 367, "currency": "USD", "stops": 1, "duration": "PT11H00M" },
+  { "airline": "United Airlines",     "origin": "ORD", "destination": "CDG", "price": 489, "currency": "USD", "stops": 0, "duration": "PT8H30M" },
+  { "airline": "Air France",          "origin": "ORD", "destination": "CDG", "price": 678, "currency": "USD", "stops": 0, "duration": "PT8H15M" },
+
+  { "airline": "Spirit Airlines",     "origin": "ORD", "destination": "MBJ", "price": 278, "currency": "USD", "stops": 1, "duration": "PT6H00M" },
+  { "airline": "American Airlines",   "origin": "ORD", "destination": "MBJ", "price": 345, "currency": "USD", "stops": 0, "duration": "PT3H45M" },
+  { "airline": "Delta Air Lines",     "origin": "ORD", "destination": "MBJ", "price": 467, "currency": "USD", "stops": 0, "duration": "PT3H50M" },
+
+  { "airline": "Norwegian Air",       "origin": "ORD", "destination": "FCO", "price": 423, "currency": "USD", "stops": 1, "duration": "PT12H00M" },
+  { "airline": "United Airlines",     "origin": "ORD", "destination": "FCO", "price": 567, "currency": "USD", "stops": 1, "duration": "PT11H00M" },
+  { "airline": "ITA Airways",         "origin": "ORD", "destination": "FCO", "price": 789, "currency": "USD", "stops": 1, "duration": "PT11H30M" },
+
+  { "airline": "WestJet",             "origin": "YVR", "destination": "CUN", "price": 378, "currency": "USD", "stops": 1, "duration": "PT8H00M" },
+  { "airline": "Air Canada",          "origin": "YVR", "destination": "CUN", "price": 456, "currency": "USD", "stops": 0, "duration": "PT6H00M" },
+  { "airline": "Air Transat",         "origin": "YVR", "destination": "CUN", "price": 612, "currency": "USD", "stops": 0, "duration": "PT6H15M" },
+
+  { "airline": "Air China",           "origin": "YVR", "destination": "NRT", "price": 512, "currency": "USD", "stops": 1, "duration": "PT13H00M" },
+  { "airline": "Air Canada",          "origin": "YVR", "destination": "NRT", "price": 645, "currency": "USD", "stops": 0, "duration": "PT9H30M" },
+  { "airline": "Japan Airlines",      "origin": "YVR", "destination": "NRT", "price": 856, "currency": "USD", "stops": 0, "duration": "PT9H15M" },
+
+  { "airline": "Singapore Airlines",  "origin": "YVR", "destination": "DPS", "price": 756, "currency": "USD", "stops": 1, "duration": "PT16H00M" },
+  { "airline": "Cathay Pacific",      "origin": "YVR", "destination": "DPS", "price": 912, "currency": "USD", "stops": 1, "duration": "PT15H00M" },
+  { "airline": "Garuda Indonesia",    "origin": "YVR", "destination": "DPS", "price": 1145, "currency": "USD", "stops": 1, "duration": "PT15H30M" },
+
+  { "airline": "WestJet",             "origin": "YVR", "destination": "HNL", "price": 198, "currency": "USD", "stops": 0, "duration": "PT5H30M" },
+  { "airline": "Air Canada",          "origin": "YVR", "destination": "HNL", "price": 256, "currency": "USD", "stops": 0, "duration": "PT5H15M" },
+  { "airline": "Hawaiian Airlines",   "origin": "YVR", "destination": "HNL", "price": 345, "currency": "USD", "stops": 0, "duration": "PT5H20M" },
+
+  { "airline": "Spirit Airlines",     "origin": "MIA", "destination": "CUN", "price": 215, "currency": "USD", "stops": 0, "duration": "PT2H00M" },
+  { "airline": "American Airlines",   "origin": "MIA", "destination": "CUN", "price": 278, "currency": "USD", "stops": 0, "duration": "PT1H45M" },
+  { "airline": "Delta Air Lines",     "origin": "MIA", "destination": "CUN", "price": 389, "currency": "USD", "stops": 0, "duration": "PT1H50M" },
+
+  { "airline": "Spirit Airlines",     "origin": "MIA", "destination": "MBJ", "price": 178, "currency": "USD", "stops": 0, "duration": "PT1H30M" },
+  { "airline": "American Airlines",   "origin": "MIA", "destination": "MBJ", "price": 234, "currency": "USD", "stops": 0, "duration": "PT1H15M" },
+  { "airline": "JetBlue",             "origin": "MIA", "destination": "MBJ", "price": 312, "currency": "USD", "stops": 0, "duration": "PT1H20M" },
+
+  { "airline": "Bahamasair",          "origin": "MIA", "destination": "NAS", "price": 118, "currency": "USD", "stops": 0, "duration": "PT0H45M" },
+  { "airline": "American Airlines",   "origin": "MIA", "destination": "NAS", "price": 165, "currency": "USD", "stops": 0, "duration": "PT0H30M" },
+  { "airline": "Silver Airways",      "origin": "MIA", "destination": "NAS", "price": 212, "currency": "USD", "stops": 0, "duration": "PT0H40M" },
+
+  { "airline": "American Airlines",   "origin": "MIA", "destination": "HAV", "price": 145, "currency": "USD", "stops": 0, "duration": "PT0H45M" },
+  { "airline": "JetBlue",             "origin": "MIA", "destination": "HAV", "price": 189, "currency": "USD", "stops": 0, "duration": "PT0H40M" },
+  { "airline": "Southwest Airlines",  "origin": "MIA", "destination": "HAV", "price": 245, "currency": "USD", "stops": 1, "duration": "PT3H00M" },
+
+  { "airline": "Norwegian Air",       "origin": "MIA", "destination": "FCO", "price": 398, "currency": "USD", "stops": 1, "duration": "PT12H30M" },
+  { "airline": "American Airlines",   "origin": "MIA", "destination": "FCO", "price": 512, "currency": "USD", "stops": 1, "duration": "PT11H30M" },
+  { "airline": "ITA Airways",         "origin": "MIA", "destination": "FCO", "price": 712, "currency": "USD", "stops": 0, "duration": "PT10H00M" }
+]

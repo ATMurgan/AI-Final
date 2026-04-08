@@ -49,9 +49,10 @@ An AI chatbot-based travel planner that recommends the cheapest feasible trip it
 | Component | Path | Description |
 |---|---|---|
 | `Header` | `src/components/Header.tsx` | Top bar with logo, app name, tagline |
-| `ChatPanel` | `src/components/ChatPanel.tsx` | Left panel — chat UI; client component, calls `/api/chat` |
+| `ClientApp` | `src/components/ClientApp.tsx` | Client wrapper — holds itinerary state shared between chat and results panels |
+| `ChatPanel` | `src/components/ChatPanel.tsx` | Left panel — chat UI; calls `/api/chat`, triggers `onItinerariesUpdate` |
 | `ChatMessage` | `src/components/ChatMessage.tsx` | Individual message bubble (user/assistant) |
-| `TripResultsPanel` | `src/components/TripResultsPanel.tsx` | Right panel — itinerary results grid; async server component |
+| `TripResultsPanel` | `src/components/TripResultsPanel.tsx` | Right panel — displays itinerary cards from props; shows empty state when none |
 | `ItineraryCard` | `src/components/ItineraryCard.tsx` | Single trip result card |
 
 ---
@@ -128,7 +129,8 @@ An AI chatbot-based travel planner that recommends the cheapest feasible trip it
 
 | Route | Method | Description |
 |---|---|---|
-| `/api/chat` | POST | Main orchestration: save user msg → call Ollama → extract prefs → optionally call Amadeus → generate itineraries → save AI reply |
+| `/api/chat` | POST | Main orchestration: save user msg → call Ollama (conversation only) → extract prefs → on first-time completion, generate itineraries server-side → save AI reply |
+| `/api/session` | POST | Create session row in DB + set `ba_session` HttpOnly cookie |
 | `/api/messages` | GET | Fetch all messages for the demo session |
 | `/api/messages` | POST | Insert a single message (CRUD backup) |
 
@@ -151,23 +153,43 @@ Three core tables + two AI/API tables. All keyed on `session_id` (fixed demo UUI
 ## AI Integration (Ollama)
 
 ### How it works
-1. User sends a message → ChatPanel POSTs to `/api/chat`
+1. User sends a message → ChatPanel POSTs to `/api/chat` with `X-Session-Id` header
 2. Server loads conversation history + current preferences from DB
-3. Calls `processMessage()` in `src/lib/ai.ts` → sends to Ollama with `format: "json"`
-4. Ollama returns a structured JSON response:
-   - `message` — natural language reply shown to user
-   - `preferencesUpdate` — fields to upsert into `travel_preferences`
-   - `isComplete` — true when all 4 required fields are collected
-   - `missingFields` — which required fields still need to be asked
-   - `itineraries` — populated only when asked to generate trip options
-5. When `isComplete`, Ollama generates 3 mock itineraries (or uses Amadeus data if configured)
-6. `router.refresh()` on the client causes `TripResultsPanel` to re-fetch and display new cards
+3. Calls `processMessage()` in `src/lib/ai.ts` → sends to Ollama with `format: "json"` (conversation only)
+4. **Dual extraction**: Ollama's `preferencesUpdate` is merged with `extractPreferencesFromText()` (regex safety net). Ollama values take priority; regex fills gaps when Ollama returns null.
+5. Combined preferences are upserted into the DB via COALESCE merge (preserves prior fields)
+6. Server checks all 4 required fields server-side + checks if itineraries already exist in DB
+7. If all fields present and no itineraries yet → `generateItinerariesFromData()` deterministically picks cheapest combos
+8. Itineraries are returned directly in the API response JSON → `ChatPanel` passes them to `TripResultsPanel` via React state (no cookie/refresh needed)
+
+### Why itineraries are generated server-side (not by Ollama)
+Smaller LLMs like `llama3.2` reliably handle conversation but often fail to populate a complex nested JSON array (`itineraries`) in the same response. Generating itineraries deterministically from the pricing data is both faster and 100% reliable.
+
+### Pricing data
+- **Mock JSON** (default): `src/data/flights.json` (132 entries, 44 routes) and `src/data/hotels.json` (75 entries, 15 destinations). Filtered by `searchAllMock()` in `src/lib/apis/mockData.ts`.
+- **Amadeus** (optional): Live data via Amadeus Self-Service API when `AMADEUS_CLIENT_ID` / `AMADEUS_CLIENT_SECRET` are set.
+
+### Itinerary selection algorithm (`generateItinerariesFromData`)
+- Cross-products all matching flights × hotels
+- Calculates `totalCost = flight.price + (hotel.pricePerNight × nights) + (dailyBudget × nights)`
+- Uses destination-specific daily budgets (e.g. $35/day Bangkok, $110/day Honolulu)
+- Filters out combos that exceed the user's budget
+- Returns up to 3 cheapest options, each with a different hotel for variety
+
+### Preference extraction reliability
+`extractPreferencesFromText()` in `src/lib/ai.ts` runs on every message regardless of Ollama's response. It catches `$1500`, `7 days`, `from Toronto`, `to Cancun` etc. via regex. This means itinerary generation works even if Ollama returns `preferencesUpdate: null`.
 
 ### Fallback
-If Ollama is not running (connection refused), `generateStubResponse()` handles basic keyword extraction and returns canned follow-up questions.
+If Ollama is not running (connection refused), `generateStubResponse()` handles basic keyword extraction and returns canned follow-up questions. Itinerary generation still works (it's server-side, not Ollama-dependent).
 
 ### Required fields before generating itineraries
 `budget`, `origin`, `destination`, `tripLengthDays`
+
+### Per-session isolation
+- `ChatPanel` generates a UUID on mount, stored in `sessionStorage` (cleared on tab close / refresh)
+- POSTs UUID to `/api/session` → creates DB row + sets `ba_session` HttpOnly cookie
+- All `/api/chat` requests carry `X-Session-Id` header
+- Itineraries are returned in the `/api/chat` response JSON → `ClientApp` holds them in React state and passes to `TripResultsPanel` as a prop
 
 ### Setup
 ```bash

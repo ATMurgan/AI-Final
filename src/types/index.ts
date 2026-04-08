@@ -42,4 +42,5 @@ export interface ChatResponse {
   userMessage: ChatMessage;
   aiMessage: ChatMessage;
   itinerariesGenerated: boolean;
+  itineraries?: Itinerary[];
 }

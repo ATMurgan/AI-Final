@@ -1,0 +1,91 @@
+[
+  { "name": "Hostel Mayan Cancun",            "destination": "CUN", "stars": 2, "pricePerNight": 42,  "currency": "USD" },
+  { "name": "Holiday Inn Cancun Arenas",      "destination": "CUN", "stars": 3, "pricePerNight": 89,  "currency": "USD" },
+  { "name": "Grand Oasis Palm",               "destination": "CUN", "stars": 4, "pricePerNight": 138, "currency": "USD" },
+  { "name": "Hyatt Ziva Cancun",              "destination": "CUN", "stars": 5, "pricePerNight": 185, "currency": "USD" },
+  { "name": "Moon Palace Cancun",             "destination": "CUN", "stars": 5, "pricePerNight": 210, "currency": "USD" },
+
+  { "name": "Central London Hostel",          "destination": "LHR", "stars": 2, "pricePerNight": 58,  "currency": "USD" },
+  { "name": "ibis London Heathrow",           "destination": "LHR", "stars": 3, "pricePerNight": 98,  "currency": "USD" },
+  { "name": "Holiday Inn Kensington",         "destination": "LHR", "stars": 4, "pricePerNight": 158, "currency": "USD" },
+  { "name": "Marriott London County Hall",    "destination": "LHR", "stars": 4, "pricePerNight": 212, "currency": "USD" },
+  { "name": "The Savoy London",               "destination": "LHR", "stars": 5, "pricePerNight": 385, "currency": "USD" },
+
+  { "name": "Generator Paris Hostel",         "destination": "CDG", "stars": 2, "pricePerNight": 48,  "currency": "USD" },
+  { "name": "ibis Paris Gare du Nord",        "destination": "CDG", "stars": 3, "pricePerNight": 92,  "currency": "USD" },
+  { "name": "Mercure Paris Opera",            "destination": "CDG", "stars": 4, "pricePerNight": 148, "currency": "USD" },
+  { "name": "Hotel Du Louvre",                "destination": "CDG", "stars": 4, "pricePerNight": 195, "currency": "USD" },
+  { "name": "Hotel Lutetia Paris",            "destination": "CDG", "stars": 5, "pricePerNight": 342, "currency": "USD" },
+
+  { "name": "Khaosan Tokyo Hostel",           "destination": "NRT", "stars": 2, "pricePerNight": 38,  "currency": "USD" },
+  { "name": "APA Hotel Shinjuku",             "destination": "NRT", "stars": 3, "pricePerNight": 72,  "currency": "USD" },
+  { "name": "Shinjuku Washington Hotel",      "destination": "NRT", "stars": 3, "pricePerNight": 88,  "currency": "USD" },
+  { "name": "Hotel Sunroute Plaza Shinjuku",  "destination": "NRT", "stars": 4, "pricePerNight": 118, "currency": "USD" },
+  { "name": "Park Hyatt Tokyo",               "destination": "NRT", "stars": 5, "pricePerNight": 395, "currency": "USD" },
+
+  { "name": "Puri Garden Hotel Bali",         "destination": "DPS", "stars": 2, "pricePerNight": 28,  "currency": "USD" },
+  { "name": "The Layar Boutique Bali",        "destination": "DPS", "stars": 3, "pricePerNight": 65,  "currency": "USD" },
+  { "name": "Alaya Resort Ubud",              "destination": "DPS", "stars": 4, "pricePerNight": 112, "currency": "USD" },
+  { "name": "Four Seasons Resort Bali",       "destination": "DPS", "stars": 5, "pricePerNight": 248, "currency": "USD" },
+  { "name": "COMO Shambhala Estate",          "destination": "DPS", "stars": 5, "pricePerNight": 385, "currency": "USD" },
+
+  { "name": "Doctors Cave Beach Hotel",       "destination": "MBJ", "stars": 3, "pricePerNight": 82,  "currency": "USD" },
+  { "name": "S Hotel Jamaica",                "destination": "MBJ", "stars": 4, "pricePerNight": 135, "currency": "USD" },
+  { "name": "Iberostar Rose Hall Beach",      "destination": "MBJ", "stars": 4, "pricePerNight": 165, "currency": "USD" },
+  { "name": "Sandals Montego Bay",            "destination": "MBJ", "stars": 5, "pricePerNight": 295, "currency": "USD" },
+  { "name": "Round Hill Hotel and Villas",    "destination": "MBJ", "stars": 5, "pricePerNight": 345, "currency": "USD" },
+
+  { "name": "Punta Cana Princess Resort",     "destination": "PUJ", "stars": 3, "pricePerNight": 78,  "currency": "USD" },
+  { "name": "Be Live Collection Punta Cana",  "destination": "PUJ", "stars": 4, "pricePerNight": 128, "currency": "USD" },
+  { "name": "Barcelo Bavaro Beach",           "destination": "PUJ", "stars": 4, "pricePerNight": 162, "currency": "USD" },
+  { "name": "Excellence Punta Cana",          "destination": "PUJ", "stars": 5, "pricePerNight": 248, "currency": "USD" },
+  { "name": "Tortuga Bay Hotel",              "destination": "PUJ", "stars": 5, "pricePerNight": 325, "currency": "USD" },
+
+  { "name": "Yellow Hostel Rome",             "destination": "FCO", "stars": 2, "pricePerNight": 38,  "currency": "USD" },
+  { "name": "Hotel Eureka Rome",              "destination": "FCO", "stars": 3, "pricePerNight": 88,  "currency": "USD" },
+  { "name": "Bettoja Hotel Mediterraneo",     "destination": "FCO", "stars": 4, "pricePerNight": 142, "currency": "USD" },
+  { "name": "Hotel Eden Rome",               "destination": "FCO", "stars": 5, "pricePerNight": 312, "currency": "USD" },
+  { "name": "The St. Regis Rome",             "destination": "FCO", "stars": 5, "pricePerNight": 445, "currency": "USD" },
+
+  { "name": "Generator Barcelona Hostel",     "destination": "BCN", "stars": 2, "pricePerNight": 42,  "currency": "USD" },
+  { "name": "Room Mate Gerard Barcelona",     "destination": "BCN", "stars": 3, "pricePerNight": 92,  "currency": "USD" },
+  { "name": "Barcelo Sants",                  "destination": "BCN", "stars": 4, "pricePerNight": 128, "currency": "USD" },
+  { "name": "Hotel Pulitzer Barcelona",       "destination": "BCN", "stars": 4, "pricePerNight": 165, "currency": "USD" },
+  { "name": "Hotel Arts Barcelona",           "destination": "BCN", "stars": 5, "pricePerNight": 312, "currency": "USD" },
+
+  { "name": "Paseo del Prado Hostal",         "destination": "HAV", "stars": 2, "pricePerNight": 32,  "currency": "USD" },
+  { "name": "Hotel Ambos Mundos",             "destination": "HAV", "stars": 3, "pricePerNight": 68,  "currency": "USD" },
+  { "name": "Hotel Nacional de Cuba",         "destination": "HAV", "stars": 4, "pricePerNight": 125, "currency": "USD" },
+  { "name": "Hotel Saratoga Havana",          "destination": "HAV", "stars": 4, "pricePerNight": 145, "currency": "USD" },
+  { "name": "Gran Hotel Manzana Kempinski",   "destination": "HAV", "stars": 5, "pricePerNight": 245, "currency": "USD" },
+
+  { "name": "Waikiki Beachside Hostel",       "destination": "HNL", "stars": 2, "pricePerNight": 48,  "currency": "USD" },
+  { "name": "Aqua Bamboo Waikiki",            "destination": "HNL", "stars": 3, "pricePerNight": 112, "currency": "USD" },
+  { "name": "Prince Waikiki Hotel",           "destination": "HNL", "stars": 4, "pricePerNight": 165, "currency": "USD" },
+  { "name": "Hilton Hawaiian Village",        "destination": "HNL", "stars": 4, "pricePerNight": 198, "currency": "USD" },
+  { "name": "Four Seasons Resort Oahu",       "destination": "HNL", "stars": 5, "pricePerNight": 385, "currency": "USD" },
+
+  { "name": "NapPark Hostel Bangkok",         "destination": "BKK", "stars": 2, "pricePerNight": 18,  "currency": "USD" },
+  { "name": "ibis Bangkok Sukhumvit",         "destination": "BKK", "stars": 3, "pricePerNight": 48,  "currency": "USD" },
+  { "name": "Chatrium Hotel Riverside",       "destination": "BKK", "stars": 4, "pricePerNight": 88,  "currency": "USD" },
+  { "name": "Mandarin Oriental Bangkok",      "destination": "BKK", "stars": 5, "pricePerNight": 312, "currency": "USD" },
+  { "name": "Capella Bangkok",                "destination": "BKK", "stars": 5, "pricePerNight": 425, "currency": "USD" },
+
+  { "name": "Nassau Palm Hotel",              "destination": "NAS", "stars": 2, "pricePerNight": 52,  "currency": "USD" },
+  { "name": "Breezes Bahamas Resort",         "destination": "NAS", "stars": 3, "pricePerNight": 98,  "currency": "USD" },
+  { "name": "Nassau Marriott Resort",         "destination": "NAS", "stars": 4, "pricePerNight": 148, "currency": "USD" },
+  { "name": "Club Med Columbus Isle",         "destination": "NAS", "stars": 4, "pricePerNight": 175, "currency": "USD" },
+  { "name": "Atlantis Paradise Island",       "destination": "NAS", "stars": 5, "pricePerNight": 285, "currency": "USD" },
+
+  { "name": "Hostal Mundo Joven Mexico City", "destination": "MEX", "stars": 2, "pricePerNight": 22,  "currency": "USD" },
+  { "name": "Hotel Geneve Mexico City",       "destination": "MEX", "stars": 3, "pricePerNight": 65,  "currency": "USD" },
+  { "name": "Camino Real Polanco Mexico",     "destination": "MEX", "stars": 4, "pricePerNight": 118, "currency": "USD" },
+  { "name": "Four Seasons Mexico City",       "destination": "MEX", "stars": 5, "pricePerNight": 295, "currency": "USD" },
+  { "name": "St. Regis Mexico City",          "destination": "MEX", "stars": 5, "pricePerNight": 365, "currency": "USD" },
+
+  { "name": "Generator Amsterdam Hostel",     "destination": "AMS", "stars": 2, "pricePerNight": 45,  "currency": "USD" },
+  { "name": "ibis Amsterdam Centre",          "destination": "AMS", "stars": 3, "pricePerNight": 98,  "currency": "USD" },
+  { "name": "NH Amsterdam Grand Hotel",       "destination": "AMS", "stars": 4, "pricePerNight": 178, "currency": "USD" },
+  { "name": "W Amsterdam Hotel",              "destination": "AMS", "stars": 5, "pricePerNight": 312, "currency": "USD" },
+  { "name": "Conservatorium Hotel Amsterdam", "destination": "AMS", "stars": 5, "pricePerNight": 345, "currency": "USD" }
+]

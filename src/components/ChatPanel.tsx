@@ -1,17 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { ChatMessage as ChatMessageType, ChatResponse } from "@/types";
+import type { ChatMessage as ChatMessageType, ChatResponse, Itinerary } from "@/types";
 import ChatMessage from "./ChatMessage";
 
 interface Props {
-  initialMessages: ChatMessageType[];
+  onItinerariesUpdate: (itineraries: Itinerary[]) => void;
 }
 
-export default function ChatPanel({ initialMessages }: Props) {
-  const router = useRouter();
-  const [messages, setMessages] = useState<ChatMessageType[]>(initialMessages);
+export default function ChatPanel({ onItinerariesUpdate }: Props) {
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -54,7 +52,7 @@ export default function ChatPanel({ initialMessages }: Props) {
       minute: "2-digit",
     });
 
-    // Optimistic update — show the message immediately with a temp id
+    // Optimistic update — show user message immediately
     const optimisticId = `optimistic-${Date.now()}`;
     setMessages((prev) => [
       ...prev,
@@ -62,7 +60,7 @@ export default function ChatPanel({ initialMessages }: Props) {
     ]);
     scrollToBottom();
 
-    // Show typing indicator
+    // Typing indicator
     const typingId = `typing-${Date.now()}`;
     setMessages((prev) => [
       ...prev,
@@ -71,7 +69,9 @@ export default function ChatPanel({ initialMessages }: Props) {
     scrollToBottom();
 
     try {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
       if (sessionIdRef.current) headers["X-Session-Id"] = sessionIdRef.current;
 
       const res = await fetch("/api/chat", {
@@ -83,8 +83,7 @@ export default function ChatPanel({ initialMessages }: Props) {
       if (!res.ok) throw new Error("Chat request failed");
       const data: ChatResponse = await res.json();
 
-      // Replace optimistic message with server-saved user message,
-      // replace typing indicator with AI response
+      // Replace optimistic message + typing indicator with server-confirmed versions
       setMessages((prev) =>
         prev
           .map((m) => (m.id === optimisticId ? data.userMessage : m))
@@ -92,13 +91,12 @@ export default function ChatPanel({ initialMessages }: Props) {
       );
       scrollToBottom();
 
-      // If itineraries were generated, refresh server components
-      if (data.itinerariesGenerated) {
-        router.refresh();
+      // If itineraries were generated, pass them up to parent immediately
+      if (data.itinerariesGenerated && data.itineraries) {
+        onItinerariesUpdate(data.itineraries);
       }
     } catch (err) {
       console.error("[ChatPanel] send error:", err);
-      // Remove optimistic message and typing indicator, restore input
       setMessages((prev) =>
         prev.filter((m) => m.id !== optimisticId && m.id !== typingId)
       );
@@ -121,12 +119,24 @@ export default function ChatPanel({ initialMessages }: Props) {
       <div className="px-4 py-3 border-b border-ocean-700">
         <h2 className="text-gray-100 font-medium text-sm">Trip Assistant</h2>
         <p className="text-gray-500 text-xs mt-0.5">
-          Tell me your budget, origin, and travel preferences
+          Tell me your budget, origin, destination, and trip length
         </p>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full gap-3 text-center pb-8">
+            <span className="text-4xl">✈️</span>
+            <p className="text-gray-400 text-sm font-medium">
+              Where do you want to go?
+            </p>
+            <p className="text-gray-600 text-xs max-w-[220px]">
+              Tell me your budget, where you&apos;re flying from, your
+              destination, and how many days.
+            </p>
+          </div>
+        )}
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
@@ -141,7 +151,7 @@ export default function ChatPanel({ initialMessages }: Props) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="e.g. $1500 budget, flying from NYC, 7 days..."
+            placeholder="e.g. $1500 budget, flying from Toronto, 7 days..."
             className="flex-1 bg-transparent text-sm text-gray-100 placeholder-gray-500 outline-none"
             disabled={isSending}
           />
@@ -166,7 +176,7 @@ export default function ChatPanel({ initialMessages }: Props) {
           </button>
         </div>
         <p className="text-gray-600 text-[10px] mt-1.5 text-center">
-          {isSending ? "Thinking..." : "Press Enter to send"}
+          {isSending ? "Searching for trips..." : "Press Enter to send"}
         </p>
       </div>
     </div>
