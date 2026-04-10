@@ -12,8 +12,9 @@ export default function ChatMessage({ message }: Props) {
       {/* Avatar */}
       <div
         className={`w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-semibold mt-1 ${
-          isUser ? "bg-coral-500 text-white" : "bg-ocean-700 text-gray-300"
+          isUser ? "text-white" : "bg-dawn-700 text-gray-300"
         }`}
+        style={isUser ? { background: "linear-gradient(135deg, #f59e0b, #ea580c)" } : {}}
       >
         {isUser ? "U" : "AI"}
       </div>
@@ -22,15 +23,16 @@ export default function ChatMessage({ message }: Props) {
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
           isUser
-            ? "bg-coral-600 text-white rounded-tr-sm"
-            : "bg-ocean-800 text-gray-100 rounded-tl-sm"
+            ? "text-white rounded-tr-sm"
+            : "bg-dawn-800 text-gray-100 rounded-tl-sm border border-dawn-700"
         }`}
+        style={isUser ? { background: "linear-gradient(135deg, #ea580c, #c2410c)" } : {}}
       >
         {message.content}
         {message.timestamp && (
           <p
             className={`text-[10px] mt-1 ${
-              isUser ? "text-coral-200" : "text-gray-500"
+              isUser ? "text-sunrise-100/60" : "text-gray-500"
             }`}
           >
             {message.timestamp}

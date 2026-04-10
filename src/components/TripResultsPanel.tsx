@@ -6,53 +6,54 @@ interface Props {
 }
 
 export default function TripResultsPanel({ itineraries }: Props) {
+  const hasResults = itineraries.length > 0;
+
   return (
-    <div className="flex flex-col h-full bg-ocean-950 overflow-y-auto">
+    <div className="flex flex-col h-full overflow-y-auto" style={{ background: "#180a22" }}>
       {/* Panel header */}
-      <div className="px-6 py-4 border-b border-ocean-700 sticky top-0 bg-ocean-950 z-10">
+      <div
+        className="px-6 py-4 border-b border-dawn-700 sticky top-0 z-10"
+        style={{ background: "#180a22" }}
+      >
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-gray-100 font-semibold text-sm">
-              Recommended Itineraries
-            </h2>
-            <p className="text-gray-500 text-xs mt-0.5">
-              Sorted by total estimated cost · lowest first
+            <h2 className="text-white font-semibold text-sm">Your Trip Plan</h2>
+            <p className="text-gray-600 text-xs mt-0.5">
+              {hasResults
+                ? `${itineraries.length} option${itineraries.length > 1 ? "s" : ""} matching your budget`
+                : "Complete the chat to generate your plan"}
             </p>
           </div>
-          <span className="text-xs text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2 py-1 rounded-full">
-            {itineraries.length} result{itineraries.length !== 1 ? "s" : ""}
-          </span>
+          {hasResults && (
+            <span
+              className="text-xs text-white px-2.5 py-1 rounded-full font-semibold"
+              style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)" }}
+            >
+              Best Price
+            </span>
+          )}
         </div>
       </div>
 
-      {itineraries.length === 0 ? (
+      {!hasResults ? (
         /* Empty state */
         <div className="flex flex-col items-center justify-center flex-1 gap-4 px-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-ocean-800 border border-ocean-700 flex items-center justify-center">
-            <svg
-              className="w-8 h-8 text-ocean-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 16l4.553 2.276A1 1 0 0021 24.382V8.618a1 1 0 00-1.447-.894L15 10m0 13V10m0 0L9 7"
-              />
-            </svg>
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: "linear-gradient(135deg, #3d1650, #6d2860)" }}
+          >
+            <span className="text-4xl">🌅</span>
           </div>
           <div>
-            <p className="text-gray-300 font-medium text-sm">
-              Your trip options will appear here
+            <p className="text-gray-300 font-semibold text-base">
+              Your trip plan will appear here
             </p>
-            <p className="text-gray-600 text-xs mt-1 max-w-xs">
-              Tell the assistant your budget, where you&apos;re flying from,
-              destination, and how many days — then sit back.
+            <p className="text-gray-600 text-xs mt-1.5 max-w-xs">
+              Give the assistant your 4 key details and we&apos;ll find the
+              cheapest trip with a full day-by-day itinerary.
             </p>
           </div>
-          <div className="mt-2 flex flex-col gap-1.5 text-left w-full max-w-xs">
+          <div className="mt-2 flex flex-col gap-2 text-left w-full max-w-xs">
             {[
               { icon: "💰", text: 'Budget  (e.g. "$1500 USD")' },
               { icon: "🛫", text: 'Origin  (e.g. "Toronto" or "JFK")' },
@@ -61,7 +62,8 @@ export default function TripResultsPanel({ itineraries }: Props) {
             ].map(({ icon, text }) => (
               <div
                 key={text}
-                className="flex items-center gap-2 bg-ocean-800/50 rounded-lg px-3 py-2"
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 border border-dawn-700"
+                style={{ background: "#3d1650" }}
               >
                 <span className="text-base">{icon}</span>
                 <span className="text-gray-400 text-xs">{text}</span>
@@ -70,14 +72,9 @@ export default function TripResultsPanel({ itineraries }: Props) {
           </div>
         </div>
       ) : (
-        /* Cards grid */
-        <div className="flex-1 px-6 py-5 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 content-start">
-          {itineraries.map((itinerary, index) => (
-            <ItineraryCard
-              key={itinerary.id}
-              itinerary={itinerary}
-              rank={index + 1}
-            />
+        <div className="px-6 py-5 flex flex-col gap-4">
+          {itineraries.map((it) => (
+            <ItineraryCard key={it.id} itinerary={it} />
           ))}
         </div>
       )}

@@ -3,7 +3,7 @@ import ClientApp from "@/components/ClientApp";
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-full bg-ocean-950">
+    <div className="flex flex-col h-full bg-dawn-950">
       <Header />
       <ClientApp />
     </div>

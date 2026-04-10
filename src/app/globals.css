@@ -7,7 +7,9 @@
 html,
 body {
   height: 100%;
-  background-color: #020c1a; /* ocean-950 */
+  /* Warm sunrise sky — deep magenta-purple at top, glowing warm dark at base */
+  background: linear-gradient(to bottom, #1a0828 0%, #251038 35%, #2a1520 70%, #180a15 100%) fixed;
+  background-color: #180a22; /* fallback */
 }
 
 * {
@@ -24,10 +26,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #374151;
+  background: #6d2860;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #f97316;
 }

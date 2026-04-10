@@ -24,12 +24,6 @@ const ollama: Ollama =
 
 const MODEL = process.env.OLLAMA_MODEL ?? "llama3.2";
 
-// isAIConfigured always returns true — Ollama needs no API key.
-// Connection errors are caught at call time and fall back to stub.
-export function isAIConfigured(): boolean {
-  return true;
-}
-
 // ----------------------------------------------------------------
 // System prompt
 // ----------------------------------------------------------------
@@ -46,7 +40,7 @@ const SYSTEM_PROMPT = `You are BudgetAdvisor, an AI travel planning assistant. Y
 ## Required Information (must collect before searching):
 - budget (number, in their stated currency)
 - origin (city or airport code where they're flying from)
-- destination (city, country, or region — if vague like "beach" or "Europe", suggest specific destinations and keep it in missingFields)
+- destination (the city or country name ONLY — e.g. "Paris", "Tokyo", "Cancun". NEVER include a phrase like "go to Paris" or "Paris, France". If vague like "beach" or "Europe", suggest specific destinations and keep it in missingFields)
 - tripLengthDays (number of days)
 
 ## Optional Information (ask naturally, don't force):
@@ -173,7 +167,7 @@ export async function processMessage(
 // generateStubResponse
 // Fallback when Ollama is not running. Does basic keyword extraction.
 // ----------------------------------------------------------------
-export function generateStubResponse(
+function generateStubResponse(
   currentPreferences: TravelPreferences,
   userMessage: string
 ): ClaudeStructuredResponse {
@@ -302,15 +296,23 @@ export function extractPreferencesFromText(
     if (iataMatch) update.origin = iataMatch[1];
   }
 
-  // Destinations
+  // Destinations — include IATA city codes Ollama might output
   const destCities: Record<string, string> = {
-    "cancun": "Cancun", "cancún": "Cancun", "london": "London", "paris": "Paris",
-    "tokyo": "Tokyo", "bali": "Bali", "jamaica": "Jamaica", "montego bay": "Montego Bay",
-    "punta cana": "Punta Cana", "dominican": "Punta Cana", "rome": "Rome",
-    "barcelona": "Barcelona", "cuba": "Cuba", "havana": "Havana", "hawaii": "Hawaii",
-    "honolulu": "Honolulu", "bangkok": "Bangkok", "thailand": "Bangkok",
-    "nassau": "Nassau", "bahamas": "Nassau", "mexico city": "Mexico City",
-    "amsterdam": "Amsterdam",
+    "cancun": "Cancun", "cancún": "Cancun", "cun": "Cancun",
+    "london": "London", "lon": "London", "lhr": "London",
+    "paris": "Paris", "par": "Paris", "cdg": "Paris",
+    "tokyo": "Tokyo", "tyo": "Tokyo", "nrt": "Tokyo", "hnd": "Tokyo",
+    "bali": "Bali", "dps": "Bali", "denpasar": "Bali",
+    "jamaica": "Jamaica", "montego bay": "Montego Bay", "mbj": "Montego Bay",
+    "punta cana": "Punta Cana", "dominican": "Punta Cana", "puj": "Punta Cana",
+    "rome": "Rome", "roma": "Rome", "rom": "Rome", "fco": "Rome", "italy": "Rome",
+    "barcelona": "Barcelona", "bcn": "Barcelona", "spain": "Barcelona",
+    "cuba": "Havana", "havana": "Havana", "hav": "Havana",
+    "hawaii": "Honolulu", "honolulu": "Honolulu", "hnl": "Honolulu", "oahu": "Honolulu",
+    "bangkok": "Bangkok", "thailand": "Bangkok", "bkk": "Bangkok",
+    "nassau": "Nassau", "bahamas": "Nassau", "nas": "Nassau",
+    "mexico city": "Mexico City", "mexico": "Mexico City", "mex": "Mexico City", "cdmx": "Mexico City",
+    "amsterdam": "Amsterdam", "ams": "Amsterdam", "netherlands": "Amsterdam", "holland": "Amsterdam",
   };
   const toMatch = lower.match(/(?:to|visit|going to|go to|destination)\s+([a-z ]+?)(?:\s+for\s|\s+from\s|\s*,|\s*\.|$)/);
   if (toMatch && !existingPrefs.destination && !update.destination) {

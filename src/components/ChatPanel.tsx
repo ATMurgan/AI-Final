@@ -12,25 +12,31 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const sessionIdRef = useRef<string | null>(null);
 
-  // On mount: generate a fresh session UUID (stored in sessionStorage so it
-  // survives in-page navigation but clears on refresh/tab close), then register
-  // it server-side so the DB row and HttpOnly cookie are created.
   useEffect(() => {
-    let sid = sessionStorage.getItem("ba_session_id");
-    if (!sid) {
-      sid = crypto.randomUUID();
-      sessionStorage.setItem("ba_session_id", sid);
-    }
+    // Always create a fresh session on page load (including refresh).
+    // This ensures old preferences/itineraries from a previous chat never
+    // leak into the new conversation. The ba_session cookie (HttpOnly,
+    // survives refresh) is overwritten by /api/session so route.ts can
+    // never fall back to a stale session.
+    const sid = crypto.randomUUID();
+    sessionStorage.setItem("ba_session_id", sid);
     sessionIdRef.current = sid;
 
     fetch("/api/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId: sid }),
-    }).catch((err) => console.error("[ChatPanel] session init error:", err));
+    })
+      .then(() => setSessionReady(true))
+      .catch((err) => {
+        console.error("[ChatPanel] session init error:", err);
+        // Allow sending anyway — X-Session-Id header will still carry the new ID
+        setSessionReady(true);
+      });
   }, []);
 
   function scrollToBottom() {
@@ -42,7 +48,7 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
 
   async function handleSend() {
     const trimmed = input.trim();
-    if (!trimmed || isSending) return;
+    if (!trimmed || isSending || !sessionReady) return;
 
     setIsSending(true);
     setInput("");
@@ -52,7 +58,6 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       minute: "2-digit",
     });
 
-    // Optimistic update — show user message immediately
     const optimisticId = `optimistic-${Date.now()}`;
     setMessages((prev) => [
       ...prev,
@@ -60,7 +65,6 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
     ]);
     scrollToBottom();
 
-    // Typing indicator
     const typingId = `typing-${Date.now()}`;
     setMessages((prev) => [
       ...prev,
@@ -83,7 +87,6 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       if (!res.ok) throw new Error("Chat request failed");
       const data: ChatResponse = await res.json();
 
-      // Replace optimistic message + typing indicator with server-confirmed versions
       setMessages((prev) =>
         prev
           .map((m) => (m.id === optimisticId ? data.userMessage : m))
@@ -91,7 +94,6 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       );
       scrollToBottom();
 
-      // If itineraries were generated, pass them up to parent immediately
       if (data.itinerariesGenerated && data.itineraries) {
         onItinerariesUpdate(data.itineraries);
       }
@@ -114,11 +116,14 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-ocean-900 border-r border-ocean-700">
+    <div className="flex flex-col h-full border-r border-dawn-700" style={{ background: "#251038" }}>
       {/* Panel header */}
-      <div className="px-4 py-3 border-b border-ocean-700">
-        <h2 className="text-gray-100 font-medium text-sm">Trip Assistant</h2>
-        <p className="text-gray-500 text-xs mt-0.5">
+      <div
+        className="px-4 py-3 border-b border-dawn-700"
+        style={{ background: "linear-gradient(180deg, #3d1650 0%, #251038 100%)" }}
+      >
+        <h2 className="text-white font-semibold text-sm">Trip Assistant</h2>
+        <p className="text-sunrise-100/50 text-xs mt-0.5">
           Tell me your budget, origin, destination, and trip length
         </p>
       </div>
@@ -127,8 +132,8 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-center pb-8">
-            <span className="text-4xl">✈️</span>
-            <p className="text-gray-400 text-sm font-medium">
+            <span className="text-4xl">🌅</span>
+            <p className="text-gray-300 text-sm font-medium">
               Where do you want to go?
             </p>
             <p className="text-gray-600 text-xs max-w-[220px]">
@@ -144,21 +149,22 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       </div>
 
       {/* Input bar */}
-      <div className="px-4 py-3 border-t border-ocean-700 bg-ocean-900">
-        <div className="flex items-center gap-2 bg-ocean-800 rounded-xl px-3 py-2">
+      <div className="px-4 py-3 border-t border-dawn-700" style={{ background: "#251038" }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2 border border-dawn-700" style={{ background: "#3d1650" }}>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="e.g. $1500 budget, flying from Toronto, 7 days..."
-            className="flex-1 bg-transparent text-sm text-gray-100 placeholder-gray-500 outline-none"
-            disabled={isSending}
+            placeholder="e.g. $1500, flying from Toronto, Cancun, 7 days..."
+            className="flex-1 bg-transparent text-sm text-gray-100 placeholder-gray-600 outline-none"
+            disabled={isSending || !sessionReady}
           />
           <button
             onClick={handleSend}
-            disabled={!input.trim() || isSending}
-            className="w-8 h-8 rounded-lg bg-coral-500 hover:bg-coral-400 disabled:bg-ocean-700 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+            disabled={!input.trim() || isSending || !sessionReady}
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-opacity disabled:opacity-30"
+            style={{ background: "linear-gradient(135deg, #f59e0b, #f97316)" }}
           >
             <svg
               className="w-4 h-4 text-white"
@@ -175,8 +181,8 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
             </svg>
           </button>
         </div>
-        <p className="text-gray-600 text-[10px] mt-1.5 text-center">
-          {isSending ? "Searching for trips..." : "Press Enter to send"}
+        <p className="text-gray-700 text-[10px] mt-1.5 text-center">
+          {isSending ? "Searching for your trip..." : "Press Enter to send"}
         </p>
       </div>
     </div>

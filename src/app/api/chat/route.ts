@@ -11,11 +11,34 @@ import { processMessage, extractPreferencesFromText } from "@/lib/ai";
 import { emptyPreferences } from "@/types/preferences";
 import type { PreferencesUpdate } from "@/types/preferences";
 import { isAmadeusConfigured, searchAll } from "@/lib/apis/amadeus";
-import { searchAllMock, generateItinerariesFromData } from "@/lib/apis/mockData";
+import { searchAllMock, generateItinerariesFromData, toIATA, DAILY_BUDGET_BY_DEST } from "@/lib/apis/mockData";
 import type { ChatResponse, Itinerary } from "@/types";
 
 const DEFAULT_SESSION_ID =
   process.env.DEFAULT_SESSION_ID ?? "00000000-0000-0000-0000-000000000001";
+
+// Strips travel-phrase prefixes Ollama tends to include (e.g. "Go to Paris" → "Paris")
+// and trailing country suffixes (e.g. "Paris, France" → "Paris").
+function normalizeLocationValue(input: string): string {
+  const prefixes = [
+    "want to go to ", "would like to go to ", "going to ", "go to ",
+    "travelling to ", "traveling to ", "travel to ",
+    "flying to ", "fly to ", "headed to ", "heading to ", "visit ",
+    "flying from ", "departing from ", "leaving from ", "from ",
+  ];
+  let cleaned = input.trim().toLowerCase();
+  for (const prefix of prefixes) {
+    if (cleaned.startsWith(prefix)) {
+      cleaned = cleaned.slice(prefix.length).trim();
+      break;
+    }
+  }
+  // Strip trailing ", Country" (e.g. "Paris, France" → "Paris")
+  const commaIdx = cleaned.indexOf(",");
+  if (commaIdx > 0) cleaned = cleaned.slice(0, commaIdx).trim();
+
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
 
 function allFieldsPresent(prefs: {
   budget: number | null;
@@ -89,6 +112,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Normalize destination/origin: strip phrases Ollama includes (e.g. "Go to Paris" → "Paris")
+    if (typeof merged.destination === "string") {
+      merged.destination = normalizeLocationValue(merged.destination);
+    }
+    if (typeof merged.origin === "string") {
+      merged.origin = normalizeLocationValue(merged.origin);
+    }
+
     const hasUpdate = Object.keys(merged).length > 0;
 
     // 5. Upsert the combined preferences
@@ -110,9 +141,18 @@ export async function POST(request: NextRequest) {
     const nowComplete = allFieldsPresent(updatedPrefs);
 
     if (nowComplete) {
-      // Check if this session already has itineraries — don't regenerate
       const existing = await getItineraries(sid);
-      if (existing.length === 0) {
+
+      if (existing.length > 0) {
+        // Already have results. Re-deliver them so the right panel stays populated
+        // if the user refreshed or React state was cleared.
+        savedItineraries = existing;
+        itinerariesGenerated = true;
+        // Keep Ollama's conversational reply as the message (it's a follow-up chat).
+      } else {
+        // No results yet — always run the search when all fields are present.
+        // Ollama's message is intentionally overridden here: it may say "Here's your
+        // plan!" prematurely, but the server is the authoritative source of results.
         const apiData = isAmadeusConfigured()
           ? await searchAll(updatedPrefs)
           : searchAllMock(updatedPrefs);
@@ -124,18 +164,49 @@ export async function POST(request: NextRequest) {
           savedItineraries = await getItineraries(sid);
           itinerariesGenerated = true;
           finalMessage =
-            `Great news! I found ${savedItineraries.length} trip option` +
-            `${savedItineraries.length > 1 ? "s" : ""} from ${updatedPrefs.origin} to ` +
+            `I found the cheapest trip from ${updatedPrefs.origin} to ` +
             `${updatedPrefs.destination} within your $${updatedPrefs.budget?.toLocaleString()} ` +
             `${updatedPrefs.currency} budget for ${updatedPrefs.tripLengthDays} nights — ` +
-            `check them out on the right, sorted cheapest first! ` +
+            `check out the full day-by-day plan on the right! ` +
             `Let me know if you'd like to adjust anything.`;
         } else {
-          finalMessage =
-            `I searched but couldn't find trips from ${updatedPrefs.origin} to ` +
-            `${updatedPrefs.destination} within your $${updatedPrefs.budget?.toLocaleString()} ` +
-            `${updatedPrefs.currency} budget for ${updatedPrefs.tripLengthDays} nights. ` +
-            `Try a higher budget, fewer nights, or a different destination.`;
+          // Diagnose the specific reason no results were found.
+          const destCode = toIATA(updatedPrefs.destination!);
+          const nights = updatedPrefs.tripLengthDays!;
+          const budget = updatedPrefs.budget!;
+
+          if (apiData.flights.length === 0 && apiData.hotels.length === 0) {
+            finalMessage =
+              `I couldn't find flights or hotels for a trip from ${updatedPrefs.origin} to ${updatedPrefs.destination}. ` +
+              `My database covers routes from New York, Toronto, Los Angeles, Chicago, Miami, Vancouver, and Montreal ` +
+              `to destinations like Cancun, London, Paris, Tokyo, Bali, Barcelona, Rome, Bangkok, and more. ` +
+              `Would you like to try a different origin or destination?`;
+          } else if (apiData.flights.length === 0) {
+            finalMessage =
+              `I couldn't find any flights from ${updatedPrefs.origin}. ` +
+              `Supported origins are: New York, Toronto, Los Angeles, Chicago, Miami, Vancouver, and Montreal. ` +
+              `Which of these would you like to fly from?`;
+          } else if (apiData.hotels.length === 0) {
+            finalMessage =
+              `I found flights to that area but no hotels in my database for ${updatedPrefs.destination}. ` +
+              `Supported destinations include: Cancun, London, Paris, Tokyo, Bali, Rome, Barcelona, Havana, Honolulu, Bangkok, Nassau, Mexico City, and Amsterdam. ` +
+              `Would you like to pick one of these?`;
+          } else {
+            // Flights and hotels exist — budget is the constraint.
+            const cheapestFlight = Math.min(...apiData.flights.map((f) => f.price));
+            const cheapestHotel = Math.min(...apiData.hotels.map((h) => h.pricePerNight));
+            const dailyBudget = DAILY_BUDGET_BY_DEST[destCode] ?? 70;
+            const minCost = Math.round(cheapestFlight + cheapestHotel * nights + dailyBudget * nights);
+
+            finalMessage =
+              `The cheapest ${nights}-night trip from ${updatedPrefs.origin} to ${updatedPrefs.destination} I can find ` +
+              `costs $${minCost.toLocaleString()} ${updatedPrefs.currency} — ` +
+              `$${cheapestFlight.toLocaleString()} for flights, ` +
+              `$${cheapestHotel}/night for the most affordable hotel, ` +
+              `and ~$${dailyBudget}/day for food and activities. ` +
+              `Your budget of $${budget.toLocaleString()} ${updatedPrefs.currency} is a bit short. ` +
+              `Would you like to increase your budget, shorten the trip, or try a more affordable destination?`;
+          }
         }
       }
     }

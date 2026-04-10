@@ -34,12 +34,20 @@ const CITY_TO_IATA: Record<string, string> = {
   "cun":                "CUN",
   "london":             "LHR",
   "lhr":                "LHR",
+  "lon":                "LHR",   // city code Ollama may use
+  "heathrow":           "LHR",
   "paris":              "CDG",
   "cdg":                "CDG",
+  "par":                "CDG",   // city code Ollama may use
+  "charles de gaulle":  "CDG",
   "tokyo":              "NRT",
   "nrt":                "NRT",
+  "tyo":                "NRT",   // city code Ollama may use
+  "hnd":                "NRT",   // Haneda — redirect to NRT
+  "narita":             "NRT",
   "bali":               "DPS",
   "dps":                "DPS",
+  "denpasar":           "DPS",
   "jamaica":            "MBJ",
   "montego bay":        "MBJ",
   "mbj":                "MBJ",
@@ -48,26 +56,35 @@ const CITY_TO_IATA: Record<string, string> = {
   "dominican republic": "PUJ",
   "puj":                "PUJ",
   "rome":               "FCO",
+  "roma":               "FCO",
   "fco":                "FCO",
+  "rom":                "FCO",   // city code Ollama may use
+  "italy":              "FCO",
   "barcelona":          "BCN",
   "bcn":                "BCN",
+  "spain":              "BCN",
   "cuba":               "HAV",
   "havana":             "HAV",
   "hav":                "HAV",
   "hawaii":             "HNL",
   "honolulu":           "HNL",
   "hnl":                "HNL",
+  "oahu":               "HNL",
   "bangkok":            "BKK",
   "thailand":           "BKK",
   "bkk":                "BKK",
+  "suvarnabhumi":       "BKK",
   "nassau":             "NAS",
   "bahamas":            "NAS",
   "nas":                "NAS",
   "mexico city":        "MEX",
   "mexico":             "MEX",
   "mex":                "MEX",
+  "cdmx":               "MEX",
   "amsterdam":          "AMS",
   "ams":                "AMS",
+  "netherlands":        "AMS",
+  "holland":            "AMS",
 };
 
 // IATA → human-readable destination for display on itinerary cards
@@ -109,7 +126,7 @@ const IATA_TO_FLAG: Record<string, string> = {
 };
 
 // Typical daily spending budget per destination (food, transport, activities)
-const DAILY_BUDGET_BY_DEST: Record<string, number> = {
+export const DAILY_BUDGET_BY_DEST: Record<string, number> = {
   CUN: 60,
   LHR: 100,
   CDG: 95,
@@ -168,10 +185,9 @@ export function searchAllMock(prefs: TravelPreferences): AmadeusSearchResults {
 
 // ----------------------------------------------------------------
 // generateItinerariesFromData
-// Deterministically picks the 3 cheapest valid flight+hotel combos
-// from pre-filtered API data. No Ollama call needed — pure math.
-// Returns up to 3 itineraries sorted cheapest first, each using a
-// different hotel so options are meaningfully distinct.
+// Cross-products the filtered flights × hotels, calculates total cost
+// for each combo, and returns the single cheapest option within budget.
+// No Ollama call needed — pure math from the pre-filtered API data.
 // ----------------------------------------------------------------
 export function generateItinerariesFromData(
   prefs: TravelPreferences,
@@ -182,6 +198,7 @@ export function generateItinerariesFromData(
   const destCode   = prefs.destination ? toIATA(prefs.destination) : null;
   const flightDest = apiData.flights[0]?.destination ?? destCode ?? "???";
 
+  // Resolve daily spending budget, destination label, and flag from IATA code
   const dailyBudget =
     DAILY_BUDGET_BY_DEST[destCode ?? ""] ??
     DAILY_BUDGET_BY_DEST[flightDest] ??
@@ -199,8 +216,7 @@ export function generateItinerariesFromData(
     "🌍";
 
   // Build all valid flight+hotel combos within budget
-  type Candidate = GeneratedItinerary & { _hotelName: string };
-  const candidates: Candidate[] = [];
+  const candidates: GeneratedItinerary[] = [];
 
   for (const flight of apiData.flights) {
     for (const hotel of apiData.hotels) {
@@ -226,41 +242,11 @@ export function generateItinerariesFromData(
           pricePerNight: hotel.pricePerNight,
         },
         dailyBudget,
-        _hotelName: hotel.name,
       });
     }
   }
 
-  // Sort cheapest first
+  // Sort cheapest first and return the single best option
   candidates.sort((a, b) => a.totalCost - b.totalCost);
-
-  // Pick up to 3, each with a different hotel for meaningful variety
-  const selected: GeneratedItinerary[] = [];
-  const usedHotels = new Set<string>();
-
-  for (const c of candidates) {
-    if (selected.length >= 3) break;
-    if (!usedHotels.has(c._hotelName)) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { _hotelName: _h, ...itinerary } = c;
-      selected.push(itinerary);
-      usedHotels.add(c._hotelName);
-    }
-  }
-
-  // If fewer than 3 distinct hotels, backfill with cheapest remaining combos
-  if (selected.length < 3) {
-    const selectedCosts = new Set(selected.map((s) => s.totalCost));
-    for (const c of candidates) {
-      if (selected.length >= 3) break;
-      if (!selectedCosts.has(c.totalCost)) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { _hotelName: _h, ...itinerary } = c;
-        selected.push(itinerary);
-        selectedCosts.add(c.totalCost);
-      }
-    }
-  }
-
-  return selected;
+  return candidates.length > 0 ? [candidates[0]] : [];
 }
