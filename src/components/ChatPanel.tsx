@@ -87,10 +87,13 @@ export default function ChatPanel({ onItinerariesUpdate }: Props) {
       if (!res.ok) throw new Error("Chat request failed");
       const data: ChatResponse = await res.json();
 
+      // Guard: only replace optimistic/typing placeholders if the API returned valid message objects.
+      // If a field is missing (e.g. unexpected server error shape), keep the placeholder in place
+      // rather than inserting undefined into the messages array, which would render as "undefined".
       setMessages((prev) =>
         prev
-          .map((m) => (m.id === optimisticId ? data.userMessage : m))
-          .map((m) => (m.id === typingId ? data.aiMessage : m))
+          .map((m) => (m.id === optimisticId && data.userMessage?.content != null ? data.userMessage : m))
+          .map((m) => (m.id === typingId && data.aiMessage?.content != null ? data.aiMessage : m))
       );
       scrollToBottom();
 

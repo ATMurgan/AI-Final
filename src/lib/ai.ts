@@ -314,11 +314,23 @@ export function extractPreferencesFromText(
     "mexico city": "Mexico City", "mexico": "Mexico City", "mex": "Mexico City", "cdmx": "Mexico City",
     "amsterdam": "Amsterdam", "ams": "Amsterdam", "netherlands": "Amsterdam", "holland": "Amsterdam",
   };
+
+  // Single English words that look like destinations in "to [word]" patterns but are not.
+  // e.g. "I want to go from X to Y" — "go" matches "to go" before the regex sees "to Y".
+  const nonDestinationWords = new Set([
+    "go", "come", "fly", "travel", "visit", "be", "stay", "see", "get", "move",
+  ]);
+
   const toMatch = lower.match(/(?:to|visit|going to|go to|destination)\s+([a-z ]+?)(?:\s+for\s|\s+from\s|\s*,|\s*\.|$)/);
   if (toMatch && !existingPrefs.destination && !update.destination) {
     const raw = toMatch[1].trim();
-    update.destination = destCities[raw] ?? raw.charAt(0).toUpperCase() + raw.slice(1);
+    // Skip if the captured word is a common English verb, not a place name.
+    // Fall through to the keyword scan below in that case.
+    if (!nonDestinationWords.has(raw)) {
+      update.destination = destCities[raw] ?? raw.charAt(0).toUpperCase() + raw.slice(1);
+    }
   }
+  // Keyword scan: look for any known city/country name anywhere in the message
   if (!update.destination && !existingPrefs.destination) {
     for (const [key, label] of Object.entries(destCities)) {
       if (lower.includes(key)) { update.destination = label; break; }
